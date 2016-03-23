@@ -59,7 +59,9 @@ var UserSchema = new Schema({
     greeting: Number,
     thankyou: Number,
     costumeContests: Number,
-    birthday: Number
+    birthday: Number,
+    partyUp: Boolean,
+    partyOn: Boolean
   },
   auth: {
     blocked: Boolean,
@@ -391,7 +393,14 @@ var UserSchema = new Schema({
       hatchPet: {type: Boolean, 'default': false},
       raisePet: {type: Boolean, 'default': false},
       streak: {type: Boolean, 'default': false}
-    }
+    },
+    improvementCategories: {
+      type: Array,
+      validate: (categories) => {
+        const validCategories = ['work', 'exercise', 'healthWellness', 'school', 'teams', 'chores', 'creativity'];
+        let isValidCategory = categories.every(category => validCategories.indexOf(category) !== -1);
+        return isValidCategory;
+    }}
   },
   profile: {
     blurb: String,
@@ -520,7 +529,7 @@ UserSchema.pre('save', function(next) {
   var mountMasterProgress = shared.count.mountMasterProgress(this.items.mounts);
 
   if (mountMasterProgress >= 90 || this.achievements.mountMasterCount > 0) {
-    this.achievements.mountMaster = true
+    this.achievements.mountMaster = true;
   }
 
   // Determines if Triad Bingo should be awarded

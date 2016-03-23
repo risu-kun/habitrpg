@@ -1,12 +1,6 @@
-var _, api, calculateBonus, diminishingReturns, moment, t;
-
-api = module.exports;
-
-_ = require('lodash');
-
-moment = require('moment');
-
-t = require('./translation.js');
+import _ from 'lodash';
+import moment from 'moment';
+import t from './translation';
 
 import {
   CLASSES,
@@ -16,6 +10,8 @@ import {
   USER_CAN_OWN_QUEST_CATEGORIES,
 } from './constants';
 
+let api = module.exports;
+
 import mysterySets from './mystery-sets';
 
 import gear from './gear';
@@ -23,6 +19,7 @@ import gear from './gear';
 import appearances from './appearance';
 import backgrounds from './appearance/backgrounds.js'
 import spells from './spells';
+import faq from './faq';
 
 api.mystery = mysterySets;
 
@@ -32,8 +29,8 @@ api.gear = gear;
 api.spells = spells;
 
 /*
-  Time Traveler Store, mystery sets need their items mapped in
- */
+   Time Traveler Store, mystery sets need their items mapped in
+   */
 
 _.each(api.mystery, function(v, k) {
   return v.items = _.where(api.gear.flat, {
@@ -55,10 +52,10 @@ api.timeTravelerStore = function(owned) {
 
 
 /*
-  ---------------------------------------------------------------
-  Unique Rewards: Potion and Armoire
-  ---------------------------------------------------------------
- */
+   ---------------------------------------------------------------
+   Unique Rewards: Potion and Armoire
+   ---------------------------------------------------------------
+   */
 
 api.potion = {
   type: 'potion',
@@ -89,7 +86,7 @@ api.armoire = {
    ---------------------------------------------------------------
    Classes
    ---------------------------------------------------------------
- */
+   */
 
 api.classes = CLASSES;
 
@@ -98,7 +95,7 @@ api.classes = CLASSES;
    ---------------------------------------------------------------
    Gear Types
    ---------------------------------------------------------------
- */
+   */
 
 api.gearTypes = GEAR_TYPES;
 
@@ -374,6 +371,13 @@ api.questEggs = {
     adjective: t('questEggMonkeyAdjective'),
     canBuy: (function(u) {
       return u.achievements.quests && (u.achievements.quests.monkey != null) > 0;
+    })
+  },
+  Snail: {
+    text: t('questEggSnailText'),
+    adjective: t('questEggSnailAdjective'),
+    canBuy: (function(u) {
+      return u.achievements.quests && (u.achievements.quests.snail != null) > 0;
     })
   },
 };
@@ -1283,7 +1287,7 @@ api.quests = {
     completion: t('questEggHuntCompletion'),
     value: 1,
     canBuy: (function() {
-      return false;
+      return true;
     }),
     category: 'pet',
     collect: {
@@ -2491,6 +2495,38 @@ api.quests = {
       unlock: t('questMonkeyUnlockText')
     }
   },
+  snail: {
+    text: t('questSnailText'),
+    notes: t('questSnailNotes'),
+    completion: t('questSnailCompletion'),
+    value: 4,
+    category: 'pet',
+    boss: {
+      name: t('questSnailBoss'),
+      hp: 500,
+      str: 1.5
+    },
+    drop: {
+      items: [
+        {
+          type: 'eggs',
+          key: 'Snail',
+          text: t('questSnailDropSnailEgg')
+        }, {
+          type: 'eggs',
+          key: 'Snail',
+          text: t('questSnailDropSnailEgg')
+        }, {
+          type: 'eggs',
+          key: 'Snail',
+          text: t('questSnailDropSnailEgg')
+        }
+      ],
+      gp: 37,
+      exp: 275,
+      unlock: t('questSnailUnlockText')
+    }
+  },
 };
 
 _.each(api.quests, function(v, key) {
@@ -2606,4 +2642,4 @@ api.userDefaults = {
   ]
 };
 
-api.faq = require('./faq.js');
+api.faq = faq;
